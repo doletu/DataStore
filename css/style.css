@@ -1,0 +1,65 @@
+.styled {
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color: rgba(220, 0, 0, 1);
+    background-image: linear-gradient(to top left,
+                                      rgba(0, 0, 0, .2),
+                                      rgba(0, 0, 0, .2) 30%,
+                                      rgba(0, 0, 0, 0));
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+                inset -2px -2px 3px rgba(0, 0, 0, .6);
+}
+
+.styled:hover {
+    background-color: rgba(255, 0, 0, 1);
+}
+
+.styled:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+                inset 2px 2px 3px rgba(0, 0, 0, .6);
+}
+body{
+    background:whitesmoke;
+  
+}
+h1{
+    margin-top: 50px;
+    text-align: center;
+}
+.table{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.container{
+    flex: 2 50% 45%; 
+    margin: 5px;
+    height: auto;
+    padding: 20px;
+    margin-top: 30px;
+    width: 25%;
+    border: 2px solid;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-between;
+}
+.container label{
+    padding-top: 10px;
+    text-align: center;
+    margin-right: 20px;
+}
+.container input[type='text'], select{
+    height: 20px;
+    max-lines: 1;
+    margin-top: 10px;
+    width: 350px;
+}
+.row{
+    display:grid;
+}
