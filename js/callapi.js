@@ -305,8 +305,8 @@ function DeleteData(i){
 function SearchData(){
   var className = $(document).find("#ClassValue").val();
   
-  var key = $('.mob-box[id="Search"]').find(".Key").val();
-  var value = $('.mob-box[id="Search"]').find(".Value").val();
+  var key = $('.box[id="Search"]').find(".Key").val();
+  var value = $('.box[id="Search"]').find(".Value").val();
   
 
   var method ="GET";
