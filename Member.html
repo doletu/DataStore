@@ -31,10 +31,33 @@
             <input class="styled" value="Registration"
             type="button"
             onclick="MemberRegistration()">    
-       
+            <input class="styled" value="FetchData"
+            type="button"
+            onclick="DeleteByID()">  
         </form>
                
     </div>
+    <div class="row">
+        <label>Search Item</label>
+        <div class="box" id="Search">
+            <input type="text" class="form-control form-ctr Key" name="Key[]" placeholder="Enter Key">
+            <input type="text" class="form-control form-ctr Value" name="Key[]" placeholder="Enter Value"> 
+            <input class="styled" value="Search"
+            type="button"
+            onclick="SearchData()"> 
+            
+        </div>
+    </div>
+    <table id="myapiTable" style="width: 80%; margin: 20px;">
+        <thead>
+            <td>objectID</td>
+            <td>UserName</td>
+            <td>Action</td>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
   
     
     <script type="text/javascript" src="js/memberApi.js"></script>

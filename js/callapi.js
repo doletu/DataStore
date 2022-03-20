@@ -3,6 +3,9 @@ var NCMB = {};
 NCMB.applicationKey = "543e6ee053794c0ebbce6e668e4e86cf17a96dd2e841d3a99a6bc32576d314e0";
 NCMB.clientKey = "6c53e766837d00a8c4c7254c39c6536d1e1455aeb2dd30a0ee40ba0502375fba";
 
+var count=1;
+var currentpage=1;
+var numPage=0;
 if (window.XMLHttpRequest) { // Mozilla, Safari, ...
   request = new XMLHttpRequest();
 } else if (window.ActiveXObject) { // IE
@@ -25,6 +28,7 @@ function signature(url, method, timestamp){
 
   var _method = method;
   var _url = encodeURI(url);
+  console.log("Encode:"+_url);
   var _tmp = _url.substring(_url.lastIndexOf("//") + 2);
   var _fqdn = _tmp.substring(0, _tmp.indexOf("/"));  
 
@@ -172,44 +176,23 @@ function FetchData(){
     return data.json();
   }).then(function(result){
     var data=result.results;
-    
-    var total=(data.length/10);
-    if(total>1){
-      var count=1;
-      var currentpage=1;
-      var tab$=$('<div id="'+currentpage+'">');
-      for(var i=0; i<data.length;i++){
-        if(count>10){
-          count=1;
-          currentpage++;
-          $("#myapiTable").append(tab$);
-          var tab$=$('<div id="'+currentpage+'">');
-        }
-        count++;
-        var field = ' <input class="styled" value="Update" type="button" onclick="UpdateData(this)">'+
-                    ' <input class="styled" value="Delete" type="button" onclick="DeleteData(this)">'; 
-        var row$ = $('<tr/>');
-        row$.append($('<td id="ObjectID">').html(data[i].objectId));
-        row$.append($('<td/>').html(data[i].createDate));
-        row$.append($('<td/>').html(data[i].updateDate));
-        row$.append($('<td/>').html(field));
-        tab$.append(row$);
-      }
+    numPage= Math.ceil(data.length/10);
+    currentpage=1;
+    if(numPage==1)  count=data.length; else count=10;
+
+    var tab$=$('<tbody id="'+currentpage+'">');
+    for(var i=0; i<count;i++){
+      var field = ' <input class="styled" value="Update" type="button" onclick="UpdateData(this)">'+
+                  ' <input class="styled" value="Delete" type="button" onclick="DeleteData(this)">'; 
+      var row$ = $('<tr/>');
       
-    }else{
-      for(var i=0; i<data.length;i++){
-        count++;
-        var field = ' <input class="styled" value="Update" type="button" onclick="UpdateData(this)">'+
-                    ' <input class="styled" value="Delete" type="button" onclick="DeleteData(this)">'; 
-        var row$ = $('<tr/>');
-        row$.append($('<td id="ObjectID">').html(data[i].objectId));
-        row$.append($('<td/>').html(data[i].createDate));
-        row$.append($('<td/>').html(data[i].updateDate));
-        row$.append($('<td/>').html(field));
-        $("#myapiTable").append(row$);
-      }
+      row$.append($('<td id="ObjectID"/>').html(data[i].objectId));
+      row$.append($('<td/>').html(data[i].createDate));
+      row$.append($('<td/>').html(data[i].updateDate));
+      row$.append($('<td/>').html(field));
+      tab$.append(row$);
     }
-    
+    $("#myapiTable").append(tab$);
   });
 
 }
@@ -310,19 +293,19 @@ function SearchData(){
   
 
   var method ="GET";
-  var url="https://mbaas.api.nifcloud.com/2013-09-01/classes/"+className+"?where={'"+key+"' '"+value+"'}";
-  // var timeStamp= "2022-03-18T07:40:04.320Z";
-  var timeStamp=new Date().toISOString();
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/classes/"+className+'?Where={"B"%A35"AS"}';
+  var timeStamp= "2022-03-19T07:07:12.670Z";
+  // var timeStamp=new Date().toISOString();
 
   var sig =signature(url,method,timeStamp);
-  console.log(sig);
   var headers = {
     "X-NCMB-Application-Key":    NCMB.applicationKey,
     "X-NCMB-Signature":          sig,
     "X-NCMB-Timestamp":          timeStamp,
     "content-type": "application/json"
   };
-    
+  // +"?where={'"+key+"' '"+value+"'}"
+  console.log(sig);
   
   var request = new Request(encodeURI(url),{
     method: method,
@@ -332,10 +315,14 @@ function SearchData(){
   fetch(request).then(function(data){
     if(data.status==200|| data.status==201){
       alert("Success");
+      return data.json();
     }else{
       alert("Fail");
-    }
-    
+    }   
+  }).then(function(response){
+      var data = response.results;
+      console.log(data);
+
   });
 
 }

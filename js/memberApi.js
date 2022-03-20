@@ -3,6 +3,9 @@ var NCMB = {};
 NCMB.applicationKey = "543e6ee053794c0ebbce6e668e4e86cf17a96dd2e841d3a99a6bc32576d314e0";
 NCMB.clientKey = "6c53e766837d00a8c4c7254c39c6536d1e1455aeb2dd30a0ee40ba0502375fba";
 
+var count=1;
+var currentpage=1;
+var numPage=0;
 if (window.XMLHttpRequest) { // Mozilla, Safari, ...
   request = new XMLHttpRequest();
 } else if (window.ActiveXObject) { // IE
@@ -85,9 +88,9 @@ function signature(url, method, timestamp){
 
 function MemberRegistration(){
     var method ="POST";
-    var url="https://mbaas.api.nifcloud.com/2013-09-01/users";
-    // var timeStamp= "2022-03-18T02:41:36.941Z";
     
+  
+    var url="https://mbaas.api.nifcloud.com/2013-09-01/users";
     var timeStamp=new Date().toISOString();
   
     var sig =signature(url,method,timeStamp);
@@ -101,17 +104,17 @@ function MemberRegistration(){
     
     var data={};
    
-    var username = $(document).find("#UserName").val();
-      data["userName"]=username;
-    
-      var password = $(document).find("#password").val();
-      data["password"]=password;
-    
-      var mailAddress = $(document).find("#mailAddress").val();
-      data["mailAddress"]=mailAddress;
-    
-
-
+    var username = $(document).find("#userName").val();
+    data["userName"]=username;
+    console.log(username);
+    var password = $(document).find("#password").val();
+    data["password"]=password;
+  
+    console.log(password);
+    var mailAddress = $(document).find("#mailAddress").val();
+    data["mailAddress"]=mailAddress;
+  
+    console.log(mailAddress);
 
     var request = new Request(url,{
       method: method,
@@ -120,12 +123,259 @@ function MemberRegistration(){
       body: JSON.stringify(data)
     });
     fetch(request).then(function(data){
-      if(data.status==200|| data.status==201){
+      return data.json();
+    }).then(function(result){
+      console.log(result);
+    });
+
+
+
+    // var request = new Request(url,{
+    //   method: method,
+    //   mode:"cors",
+    //   headers: headers,
+    //   body: JSON.stringify(data)
+    // });
+    // fetch(request).then(function(data){
+    //   if( data.status==201){
+    //     alert("Success");
+    //   }else{
+    //     alert("Fail");
+    //   }
+      
+    // });
+}
+
+function EmailRegister(){
+  
+  var method ="POST";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/requestMailAddressUserEntry";
+  var timeStamp=new Date().toISOString();
+  
+  var sig =signature(url,method,timeStamp);
+
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+  var data={};
+   
+  var username = $(document).find("#UserName").val();
+  data["userName"]="A";
+  var request = new Request(url,{
+      method: method,
+      mode:"cors",
+      headers: headers,
+      body: JSON.stringify(data)
+    });
+    fetch(request).then(function(data){
+      if( data.status==201){
         alert("Success");
-        FetchData();
       }else{
         alert("Fail");
       }
       
     });
+}
+function GetUserByID(){
+  var method ="GET";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/GX4uMBFtdCdYjDFA";
+  var timeStamp=new Date().toISOString();
+
+  var sig =signature(url,method,timeStamp);
+
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+  
+
+  var request = new Request(url,{
+    method: method,
+    mode:"cors",
+    headers: headers,
+  });
+  fetch(request).then(function(data){
+    return data.json();
+  }).then(function(result){
+    console.log(result);
+  });
+
+}
+
+
+function RenewlByID(){
+  var method ="PUT";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/GX4uMBFtdCdYjDFA";
+  var timeStamp=new Date().toISOString();
+
+  var sig =signature(url,method,timeStamp);
+
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+  
+
+  var data={};
+   
+  var username = $(document).find("#UserName").val();
+  data["userName"]=username;
+  
+  var password = $(document).find("#password").val();
+  data["password"]=password;
+
+  var mailAddress = $(document).find("#mailAddress").val();
+  data["mailAddress"]=mailAddress;
+
+
+  var request = new Request(url,{
+    method: method,
+    mode:"cors",
+    headers: headers,
+    body: JSON.stringify(data)
+  });
+  fetch(request).then(function(data){
+    return data.json();
+  }).then(function(result){
+    console.log(result);
+  });
+
+}
+
+function LoginUser(){
+  var method ="GET";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/login?userName=ABC&password=123456";
+  var timeStamp=new Date().toISOString();
+
+  var sig =signature(url,method,timeStamp);
+
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+  
+
+  var request = new Request(url,{
+    method: method,
+    mode:"cors",
+    headers: headers,
+  });
+  fetch(request).then(function(data){
+    return data.json();
+  }).then(function(result){
+    console.log(result);
+  });
+}
+
+
+function DeleteByID(){
+  var method ="DELETE";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/GtLdsSjy2nmYkWIL";
+  var timeStamp=new Date().toISOString();
+
+  var sig =signature(url,method,timeStamp);
+
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+  
+  var request = new Request(url,{
+    method: method,
+    mode:"cors",
+    headers: headers,
+  });
+  fetch(request).then(function(data){
+    return data.json();
+  }).then(function(result){
+    console.log(result);
+  });
+
+}
+function GetUserByID(){
+  var method ="GET";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/logout";
+  var timeStamp=new Date().toISOString();
+
+  var sig =signature(url,method,timeStamp);
+
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+  
+
+  var request = new Request(url,{
+    method: method,
+    mode:"cors",
+    headers: headers,
+  });
+  fetch(request).then(function(data){
+    return data.json();
+  }).then(function(result){
+    console.log(result);
+  });
+
+}
+
+function FetchData(){
+  var table =$(document).find("#myapiTable").children("tbody");
+  table.remove();
+  var method ="GET";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/";
+  // var timeStamp= "2022-03-18T02:41:36.941Z";
+  var timeStamp=new Date().toISOString();
+
+  var sig =signature(url,method,timeStamp);
+
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+    
+  
+  var request = new Request(url,{
+    method: method,
+    mode:"cors",
+    headers: headers,
+  });
+  fetch(request).then(function(data){
+    if(data!=null){
+      return data.json();
+    }
+  }).then(function(result){
+    var data=result.results;
+    numPage= Math.ceil(data.length/10);
+    currentpage=1;
+    if(numPage==1)  count=data.length; else count=10;
+
+    var tab$=$('<tbody id="'+currentpage+'">');
+    for(var i=0; i<count;i++){
+      var field = ' <input class="styled" value="Update" type="button" onclick="UpdateData(this)">'+
+                  ' <input class="styled" value="Delete" type="button" onclick="DeleteData(this)">'; 
+      var row$ = $('<tr/>');
+      
+      row$.append($('<td id="ObjectID"/>').html(data[i].objectId));
+      row$.append($('<td/>').html(data[i].userName));
+      row$.append($('<td/>').html(field));
+      tab$.append(row$);
+    }
+    $("#myapiTable").append(tab$);
+  });
+
 }
