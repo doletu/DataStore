@@ -8,15 +8,10 @@
 </head><!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <link href="css/style.css" rel="styleSheet" />
-<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
-
-
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
 
 
-<!-- DataTalbe js -->
 <script src="https://code.jquery.com/jquery-3.5.1.js" type="text/javascript"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" type="text/javascript"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js" type="text/javascript"></script>
@@ -24,39 +19,41 @@
 <script src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js" type="text/javascript"></script>
 <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
 
-
-
 <body>
     <header>
-        <h1>Data Store API</h1>
+        <h1>MemberManager API</h1>
     </header>
     <div class="table">
         <form>
+          
+            <div class="mob-box">
+                <input type="text" class="form-control form-ctr Key" readonly id="ClassName" value="userName"></input>
+                <input  id="userName" type="text" class="form-control form-ctr Value" name="Key[]" placeholder="Enter Value">               
+                <div class="clearfix"></div>
+            </div>
+
             
-            <label id="ClassName">ClassName</label>
-            <input id="ClassValue" name="ClassValue"/>
-             
             <div class="mob-box">
-                <input type="text" class="form-control form-ctr Key" readonly name="Key[]" value="Name">
-                <input type="text" class="form-control form-ctr Value" name="Key[]" placeholder="Enter Value">
+                <input type="text" class="form-control form-ctr Key"  readonly id="ClassName" value="password"></input>
+                <input  id="password" type="text" class="form-control form-ctr Value" name="Key[]" placeholder="Enter Value">               
                 <div class="clearfix"></div>
             </div>
             <div class="mob-box">
-                <input type="text" class="form-control form-ctr Key"  readonly name="Key[]" value="Address">
-                <input type="text" class="form-control form-ctr Value" name="Key[]" placeholder="Enter Value">
+                <input type="text" class="form-control form-ctr Key" id="ClassName" readonly value="mailAddress"></input>
+                <input  id="mailAddress" type="text" class="form-control form-ctr Value" name="Key[]" placeholder="Enter Value">               
                 <div class="clearfix"></div>
             </div>
-              <div class="mob-box">
-                <input type="text" class="form-control form-ctr Key" readonly name="Key[]" value="Phone">
-                <input type="text" class="form-control form-ctr Value" name="Key[]" placeholder="Enter Value">
-                <div class="clearfix"></div>
-            </div>
+            
+           
             <input class="styled" value="Registration"
             type="button"
-            onclick="Registration()">    
+            onclick="MemberRegistration()">    
+            <input class="styled" value="EmailConfirm"
+            type="button"
+            onclick="EmailConfirm()">  
             <input class="styled" value="FetchData"
             type="button"
-            onclick="FetchData()">    
+            onclick="FetchRole()">  
         </form>
                
     </div>
@@ -64,49 +61,30 @@
         <label>Search Item</label>
         <div class="box" id="Search">
             <select id="KeySearch" class="form-control form-ctr Key" name="cars" style="height: 50px; text-align: start;">
-                <option value="Name">Name</option>
-                <option value="Address">Address</option>
-                <option value="Phone">Phone</option>
-              </select>
-            <input type="text" class="form-control form-ctr Value" name="Key[]" placeholder="Enter Value" style="height: 50px; margin-top: 5px;"> 
+                <option value="userName">UserName</option>
+                <option value="mailAddress">mailAddress</option>
+            </select>
+            <input type="text" class="form-control form-ctr Value" name="Key[]" placeholder="Enter Value"  style="height: 50px; margin-top: 5px;"> 
             <input class="styled" value="Search"
             type="button"
             onclick="SearchData()"> 
             
         </div>
     </div>
+    
     <table id="example" class="display"style="width: 80%; margin: 20px;">
         <thead> 
             <th>objectId</th>
             <th>createDate</th>
             <th>updateDate</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Phone</th>    
-            <th>Action</th>  
         </thead>
         <tbody>
 
         </tbody>
     </table>
-
-
+  
+    
     <script src="js/NCMB.js" type="text/javascript"></script>
-    <script type="text/javascript" src="js/callapi.js"></script>
-    <script>
-
-        $(document).on("click", ".add-field", function () {
-            var field = '<div class="mob-box">' +
-                    '<input type="text" class="form-control form-ctr" name="mobiles[]" placeholder="Enter Key">'+
-                    '<input type="text" class="form-control form-ctr" name="mobiles[]" placeholder="Enter Value">' +
-                    '<a href="javascript:void(0);" class="remove-field cust-btn">Remove</a>' +
-                    '<div class="clearfix"></div>' +
-                    '</div>';
-            $(field).insertAfter('.mob-box:last');
-        });
-        $(document).on("click", ".remove-field", function () {
-            $(this).parent('.mob-box').remove();
-        });
-    </script>
+    <script type="text/javascript" src="js/roleApi.js"></script>
 </body>
 </html>

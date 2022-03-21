@@ -1,89 +1,124 @@
-
-var NCMB = {};
-NCMB.applicationKey = "543e6ee053794c0ebbce6e668e4e86cf17a96dd2e841d3a99a6bc32576d314e0";
-NCMB.clientKey = "6c53e766837d00a8c4c7254c39c6536d1e1455aeb2dd30a0ee40ba0502375fba";
-
-var count=1;
-var currentpage=1;
-var numPage=0;
-if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-  request = new XMLHttpRequest();
-} else if (window.ActiveXObject) { // IE
-  try {
-    request = new ActiveXObject('Msxml2.XMLHTTP');
-  } 
-  catch (e) {
-    try {
-      request = new ActiveXObject('Microsoft.XMLHTTP');
-    } 
-    catch (e) {}
+var acl ={
+  "*":{
+     "read":true,
+     "write":true
   }
 }
 
-function signature(url, method, timestamp){
-  var signature = "";
-  var _applicationKey = NCMB.applicationKey;
-  var _timestamp = timestamp;
-  var _clientKey = NCMB.clientKey;
+function initData(jsonData){
+  var field = ' <input class="styled" value="Update" type="button" onclick="RenewlByID(this)">'+
+                  ' <input class="styled" value="Delete" type="button" onclick="DeleteByID(this)">'+
+                  ' <input class="styled" value="ResetPassword" type="button" onclick="ResetPassword(this)">'; 
+    $('#example').DataTable().destroy();
+      
+     
+      $('#example').DataTable( {
+        data: jsonData,
+        columns: [
+          { 'data': 'objectId',
+          "render": function ( data, type, row, meta ) {
+            return '<input id="ObjectID" type="text" disabled value="'+data+'"/>';
+          }
+         },
+          { 'data': 'createDate' ,
+          "render": function ( data, type, row, meta ) {
+            return '<input id="createDate" type="text" disabled value="'+data+'"/>';
+          }},
+          { 'data': 'updateDate' ,
+          "render": function ( data, type, row, meta ) {
+            return '<input id="updateDate" type="text" disabled value="'+data+'"/>';
+          }},
+          { 'data': 'userName',
+            "render": function ( data, type, row, meta ) {
+              return '<input id="userName" type="text" value="'+data+'"/>';
+            }
+          },
+          { 'data': 'mailAddress',
+          "render": function ( data, type, row, meta ) {
+            return '<input id="mailAddress" type="text" value="'+data+'"/>';
+          } },
+          { 'data': null,
+            'render': function ( data, type, row, meta ) {
+              return field;},
+          }
+        ],
+      paging: true,
+      search:false,
+    });   
+}
 
-  var _method = method;
-  var _url = encodeURI(url);
-  var _tmp = _url.substring(_url.lastIndexOf("//") + 2);
-  var _fqdn = _tmp.substring(0, _tmp.indexOf("/"));  
 
-  var _position = _url.indexOf("?");
-  var _path = "";
-  var _data = {};
+function FetchData(){
+  var table =$(document).find("#myapiTable").children("tbody");
+  table.remove();
+  var method ="GET";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/";
+  // var timeStamp= "2022-03-18T02:41:36.941Z";
+  var timeStamp=new Date().toISOString();
 
-  if(_position == -1) {
-    _path =  _url.substring(_url.lastIndexOf(_fqdn) + _fqdn.length );
-  }
-  else{
-    var _get_parameter= _url.substring(_position + 1);
-    _path = _url.substring(_url.lastIndexOf(_fqdn) + _fqdn.length, _position);
-    _tmp = _get_parameter.split("&");
-    for (var i = 0; i < _tmp.length; i++) {
-    _position = _tmp[i].indexOf("=");
-    _data[_tmp[i].substring(0 , _position)] = _tmp[i].substring(_position + 1);
+  var sig =signature(url,method,timeStamp);
+
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+    
+  
+  var request = new Request(url,{
+    method: method,
+    mode:"cors",
+    headers: headers,
+  });
+  fetch(request).then(function(data){
+    if(data!=null){
+      console.log(data);
+      return data.json();
     }
-  }
-  _data["SignatureMethod"] = "HmacSHA256";
-  _data["SignatureVersion"] = "2";
-  _data["X-NCMB-Application-Key"] = _applicationKey;
-  _data["X-NCMB-Timestamp"] = _timestamp;
+  }).then(function(result){
+    var jsonData=result.results;
+    var field = ' <input class="styled" value="Update" type="button" onclick="RenewlByID(this)">'+
+                  ' <input class="styled" value="Delete" type="button" onclick="DeleteByID(this)">'+
+                  ' <input class="styled" value="ResetPassword" type="button" onclick="ResetPassword(this)">'; 
+    $('#example').DataTable().destroy();
+      
+     
+      $('#example').DataTable( {
+        data: jsonData,
+        columns: [
+          { 'data': 'objectId',
+          "render": function ( data, type, row, meta ) {
+            return '<input id="ObjectID" type="text" disabled value="'+data+'"/>';
+          }
+         },
+          { 'data': 'createDate' ,
+          "render": function ( data, type, row, meta ) {
+            return '<input id="createDate" type="text" disabled value="'+data+'"/>';
+          }},
+          { 'data': 'updateDate' ,
+          "render": function ( data, type, row, meta ) {
+            return '<input id="updateDate" type="text" disabled value="'+data+'"/>';
+          }},
+          { 'data': 'userName',
+            "render": function ( data, type, row, meta ) {
+              return '<input id="userName" type="text" value="'+data+'"/>';
+            }
+          },
+          { 'data': 'mailAddress',
+          "render": function ( data, type, row, meta ) {
+            return '<input id="mailAddress" type="text" value="'+data+'"/>';
+          } },
+          { 'data': null,
+            'render': function ( data, type, row, meta ) {
+              return field;},
+          }
+        ],
+      paging: true,
+      search:false,
+    });   
+  });
 
-  var _sorted_data = {};
-  var keys = [];
-  var k, i, len;
-  for (k in _data)
-  {
-    if (_data.hasOwnProperty(k))
-    {
-      keys.push(k);
-    }
-  }
-  keys.sort();
-  len = keys.length;
-  for (i = 0; i < len; i++)
-  {
-    k = keys[i];
-    _sorted_data[k] = _data[k];
-  }
-  var parameterString = "";
-  for (k in _sorted_data)
-  {
-    if (_sorted_data.hasOwnProperty(k))
-    {
-      if (parameterString != "") {
-        parameterString += "&";
-      };
-      parameterString = parameterString + k + "=" + _sorted_data[k];
-    }
-  }
-  var forEncodeString = _method + "\n" + _fqdn + "\n" + _path + "\n" + parameterString;
-  var hash = CryptoJS.HmacSHA256(forEncodeString, _clientKey);
-  var signature = CryptoJS.enc.Base64.stringify(hash);                 
-  return signature;
 }
 
 function MemberRegistration(){
@@ -106,15 +141,15 @@ function MemberRegistration(){
    
     var username = $(document).find("#userName").val();
     data["userName"]=username;
-    console.log(username);
+  
     var password = $(document).find("#password").val();
     data["password"]=password;
   
-    console.log(password);
     var mailAddress = $(document).find("#mailAddress").val();
     data["mailAddress"]=mailAddress;
   
-    console.log(mailAddress);
+    data["acl"] =acl;
+
 
     var request = new Request(url,{
       method: method,
@@ -126,24 +161,12 @@ function MemberRegistration(){
       return data.json();
     }).then(function(result){
       console.log(result);
+      FetchData();
     });
 
 
 
-    // var request = new Request(url,{
-    //   method: method,
-    //   mode:"cors",
-    //   headers: headers,
-    //   body: JSON.stringify(data)
-    // });
-    // fetch(request).then(function(data){
-    //   if( data.status==201){
-    //     alert("Success");
-    //   }else{
-    //     alert("Fail");
-    //   }
-      
-    // });
+   
 }
 
 function EmailRegister(){
@@ -208,9 +231,11 @@ function GetUserByID(){
 }
 
 
-function RenewlByID(){
+function RenewlByID(i){
   var method ="PUT";
-  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/GX4uMBFtdCdYjDFA";
+  
+  var mailAddress =  $(i).closest("tr").find('td').find('input[id="ObjectID"]').val();
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/"+mailAddress;
   var timeStamp=new Date().toISOString();
 
   var sig =signature(url,method,timeStamp);
@@ -224,15 +249,18 @@ function RenewlByID(){
   
 
   var data={};
-   
-  var username = $(document).find("#UserName").val();
-  data["userName"]=username;
+  $(i).closest("tr").find('td').each(function(){
+    if($(this).children().prop('disabled')==false){
+      var key=$(this).children().attr("id");
+      var value=$(this).children().val();
+      if(key!="" && value!="" &key!=undefined){
+        data[key]=value;
+        console.log("key:" +key+ ",Value:" + value );
+      }
   
-  var password = $(document).find("#password").val();
-  data["password"]=password;
-
-  var mailAddress = $(document).find("#mailAddress").val();
-  data["mailAddress"]=mailAddress;
+    }
+  });
+ 
 
 
   var request = new Request(url,{
@@ -277,9 +305,11 @@ function LoginUser(){
 }
 
 
-function DeleteByID(){
+function DeleteByID(i){
   var method ="DELETE";
-  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/GtLdsSjy2nmYkWIL";
+  
+  var mailAddress =  $(i).closest("tr").find('td').find('input[id="ObjectID"]').val();
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/"+mailAddress;
   var timeStamp=new Date().toISOString();
 
   var sig =signature(url,method,timeStamp);
@@ -303,7 +333,7 @@ function DeleteByID(){
   });
 
 }
-function GetUserByID(){
+function LogOut(){
   var method ="GET";
   var url="https://mbaas.api.nifcloud.com/2013-09-01/logout";
   var timeStamp=new Date().toISOString();
@@ -331,11 +361,46 @@ function GetUserByID(){
 
 }
 
-function FetchData(){
-  var table =$(document).find("#myapiTable").children("tbody");
-  table.remove();
+function SearchData(){
+  
+  var key = $('#KeySearch').val();
+  var value = $('.box[id="Search"]').find(".Value").val();
+
   var method ="GET";
-  var url="https://mbaas.api.nifcloud.com/2013-09-01/users/";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/users"+'?where={"'+key +'":"'+ value+'"}';
+  var timeStamp= "2022-03-19T07:07:12.670Z";
+  // var timeStamp=new Date().toISOString();
+
+  var sig =signature(url,method,timeStamp);
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+  
+  var request = new Request(encodeURI(url),{
+    method: method,
+    mode:"cors",
+    headers: headers,
+  });
+  fetch(request).then(function(data){
+    if(data.status==200|| data.status==201){
+      alert("Success");
+      return data.json();
+    }else{
+      alert("Fail");
+    }   
+  }).then(function(response){
+      var data = response.results;
+      initData(data);
+      
+  });
+
+}
+function EmailConfirm(){
+  var method ="GET";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/applications/IKf4ZEliNRS3VlWc/mailAddressConfirm?token=5gDeZrh7EiUqazFbBvpAW8nhN";
   // var timeStamp= "2022-03-18T02:41:36.941Z";
   var timeStamp=new Date().toISOString();
 
@@ -351,31 +416,53 @@ function FetchData(){
   
   var request = new Request(url,{
     method: method,
-    mode:"cors",
+    mode:"no-cors",
     headers: headers,
   });
   fetch(request).then(function(data){
     if(data!=null){
-      return data.json();
+      return data;
     }
   }).then(function(result){
-    var data=result.results;
-    numPage= Math.ceil(data.length/10);
-    currentpage=1;
-    if(numPage==1)  count=data.length; else count=10;
-
-    var tab$=$('<tbody id="'+currentpage+'">');
-    for(var i=0; i<count;i++){
-      var field = ' <input class="styled" value="Update" type="button" onclick="UpdateData(this)">'+
-                  ' <input class="styled" value="Delete" type="button" onclick="DeleteData(this)">'; 
-      var row$ = $('<tr/>');
-      
-      row$.append($('<td id="ObjectID"/>').html(data[i].objectId));
-      row$.append($('<td/>').html(data[i].userName));
-      row$.append($('<td/>').html(field));
-      tab$.append(row$);
-    }
-    $("#myapiTable").append(tab$);
+      console.log(result);
   });
-
 }
+function ResetPassword(i){
+  
+  var method ="POST";
+  var url="https://mbaas.api.nifcloud.com/2013-09-01/requestPasswordReset";
+  var timeStamp=new Date().toISOString();
+  
+  var sig =signature(url,method,timeStamp);
+
+  var headers = {
+    "X-NCMB-Application-Key":    NCMB.applicationKey,
+    "X-NCMB-Signature":          sig,
+    "X-NCMB-Timestamp":          timeStamp,
+    "content-type": "application/json"
+  };
+  var data={};
+   
+  var mailAddress =  $(i).closest("tr").find('td').find('input[id="mailAddress"]').val();
+  
+  data["mailAddress"]=mailAddress;
+  var request = new Request(url,{
+      method: method,
+      mode:"cors",
+      headers: headers,
+      body: JSON.stringify(data)
+    });
+    fetch(request).then(function(data){
+      if( data.status==201){
+        alert("Success");
+      }else{
+        console.log(data);
+      }
+      
+    });
+}
+
+
+
+
+
