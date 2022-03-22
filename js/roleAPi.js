@@ -1,3 +1,40 @@
+function initDataRole(jsonData){
+  var field = ' <input class="styled" value="Update" type="button" onclick="UpdateRole(this)">'+
+  ' <input class="styled" value="Delete" type="button" onclick="DeleteRole(this)">'; 
+    $('#example').DataTable().destroy();
+      
+     
+      $('#example').DataTable( {
+        data: jsonData,
+        columns: [
+          { 'data': 'objectId',
+            "render": function ( data, type, row, meta ) {
+            return '<input id="ObjectID" type="text" disabled value="'+data+'"/>';
+            }
+          },
+          { 'data': 'createDate' ,
+          "render": function ( data, type, row, meta ) {
+            return '<input id="createDate" type="text" disabled value="'+data+'"/>';
+          }},
+          { 'data': 'updateDate' ,
+          "render": function ( data, type, row, meta ) {
+            return '<input id="updateDate" type="text" disabled value="'+data+'"/>';
+          }},
+          { 'data': 'roleName',
+            "render": function ( data, type, row, meta ) {
+              return '<input id="roleName" type="text" value="'+data+'"/>';
+            }
+          },
+          { 'data': null,
+            'render': function ( data, type, row, meta ) {
+              return field;},
+          }
+        ],
+      paging: true,
+      search:false,
+    });
+}
+
 
 function RoleRegister(){
     var method ="POST";
@@ -13,8 +50,14 @@ function RoleRegister(){
       "content-type": "application/json"
     };
     var data={};
-    data["acl"]=acl;
-    data["roleName"] = "Role Test 1";
+    $('.mob-box').each(function(){
+        var key=$(this).find(".Key").val();
+        var value=$(this).find(".Value").val();
+        if(key!="" && value!=""){
+          data[key]=value;
+          console.log("key:" +key+ ",Value:" + value );
+        }
+      });
     var request = new Request(url,{
       method: method,
       mode:"cors",
@@ -22,11 +65,7 @@ function RoleRegister(){
       body: JSON.stringify(data)
     });
     fetch(request).then(function(data){
-      if( data.status==201){
-        alert("Success");
-      }else{
-        console.log(data);
-      }
+        FetchRole();
       
     });
   }
@@ -51,14 +90,17 @@ function RoleRegister(){
     fetch(request).then(function(data){
       return data.json();
   
-    }).then(function(result){
-      console.log(result);
+    }).then(function(data){
+        console.log(data);
+        initDataRole(data.results)
     });
   }
   
   function UpdateRole(i){
     var method ="PUT";
-    var url="https://mbaas.api.nifcloud.com/2013-09-01/roles/wuQSRhTHbyN5ZqzS";
+    
+    var id =$(i).closest("tr").find("#ObjectID").val();
+    var url="https://mbaas.api.nifcloud.com/2013-09-01/roles/"+id;
     var timeStamp=new Date().toISOString();
     
     var sig =signature(url,method,timeStamp);
@@ -86,6 +128,17 @@ function RoleRegister(){
         }
       ]
     }
+    $(i).closest("tr").find('td').each(function(){
+      if($(this).children().prop('disabled')==false){
+        var key=$(this).children().attr("id");
+        var value=$(this).children().val();
+        if(key!="" && value!="" &key!=undefined){
+          data[key]=value;
+          console.log("key:" +key+ ",Value:" + value );
+        }
+    
+      }
+    });
     var request = new Request(url,{
       method: method,
       mode:"cors",
@@ -100,6 +153,8 @@ function RoleRegister(){
   
     }).then(function(result){
       console.log(result);
+      
+      FetchRole();
     });
   }
   
@@ -128,6 +183,7 @@ function DeleteRole(i){
       return data.json();
     }).then(function(result){
       console.log(result);
+      FetchRole();
     });
   
   }

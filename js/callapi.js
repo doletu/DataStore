@@ -73,7 +73,7 @@ function FetchData(){
     return data.json();
   }).then(function(result){
     var jsonData=result.results;
-
+    console.log(jsonData);
     initData(jsonData);
   
   });
